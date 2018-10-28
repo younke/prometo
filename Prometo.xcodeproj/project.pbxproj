@@ -10,6 +10,7 @@
 		A7FA71A021855F9E00FFE550 /* Prometo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A7FA719621855F9E00FFE550 /* Prometo.framework */; };
 		A7FA71A521855F9E00FFE550 /* PrometoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7FA71A421855F9E00FFE550 /* PrometoTests.swift */; };
 		A7FA71A721855F9E00FFE550 /* Prometo.h in Headers */ = {isa = PBXBuildFile; fileRef = A7FA719921855F9E00FFE550 /* Prometo.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A7FA71B12185604500FFE550 /* Promise.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7FA71B02185604500FFE550 /* Promise.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,6 +30,7 @@
 		A7FA719F21855F9E00FFE550 /* PrometoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PrometoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A7FA71A421855F9E00FFE550 /* PrometoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrometoTests.swift; sourceTree = "<group>"; };
 		A7FA71A621855F9E00FFE550 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A7FA71B02185604500FFE550 /* Promise.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Promise.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,6 +74,7 @@
 			isa = PBXGroup;
 			children = (
 				A7FA719921855F9E00FFE550 /* Prometo.h */,
+				A7FA71B02185604500FFE550 /* Promise.swift */,
 				A7FA719A21855F9E00FFE550 /* Info.plist */,
 			);
 			path = Prometo;
@@ -148,6 +151,7 @@
 				TargetAttributes = {
 					A7FA719521855F9E00FFE550 = {
 						CreatedOnToolsVersion = 10.0;
+						LastSwiftMigration = 1000;
 					};
 					A7FA719E21855F9E00FFE550 = {
 						CreatedOnToolsVersion = 10.0;
@@ -194,6 +198,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A7FA71B12185604500FFE550 /* Promise.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -341,6 +346,7 @@
 		A7FA71AB21855F9E00FFE550 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
@@ -358,6 +364,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = funjahmental.Prometo;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -366,6 +373,7 @@
 		A7FA71AC21855F9E00FFE550 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
@@ -391,6 +399,7 @@
 		A7FA71AE21855F9E00FFE550 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 7RCMC5C22J;
 				INFOPLIST_FILE = PrometoTests/Info.plist;
@@ -409,6 +418,7 @@
 		A7FA71AF21855F9E00FFE550 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 7RCMC5C22J;
 				INFOPLIST_FILE = PrometoTests/Info.plist;
