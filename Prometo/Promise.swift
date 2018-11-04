@@ -9,27 +9,67 @@
 import Foundation
 
 class Promise<T> {
-    var value: T?
-    var error: Error?
-    private var thenBlocks: [(T)->Void] = []
-    private var catchBlocks: [(Error)->Void] = []
+
+    var value: T? {
+        if case let .fulfilled(value) = state {
+            return value
+        }
+        return nil
+    }
+
+    var error: Error? {
+        if case let .failed(error) = state {
+            return error
+        }
+        return nil
+    }
+
+    struct Callback {
+        let onFullfil: ((T) -> Void)?
+        let onError: ((Error) -> Void)?
+    }
+
+    enum State {
+        case pending
+        case fulfilled(T)
+        case failed(Error)
+
+        var isCompleted: Bool {
+            if case .pending = self {
+                return false
+            }
+            return true
+        }
+    }
+
+    private var callbacks: [Callback] = []
+    private var state: State {
+        didSet {
+            runCallbacks()
+        }
+    }
 
     init(value: T) {
-        self.value = value
+        state = .fulfilled(value)
     }
 
     init() {
+        state = .pending
     }
 
     func then(_ thenBlock: @escaping (T) -> Void) -> Promise<T> {
-        thenBlocks.append(thenBlock)
+        appendCallback(onFullfil: thenBlock, onError: nil)
         return self
     }
 
     @discardableResult
     func `catch`(_ errorBlock: @escaping (Error) -> Void) -> Promise<T> {
-        catchBlocks.append(errorBlock)
+        appendCallback(onFullfil: nil, onError: errorBlock)
         return self
+    }
+
+    func ensure(_ ensureBlock: @escaping () -> Void) {
+        appendCallback(onFullfil: { _ in ensureBlock() }, onError: { _ in ensureBlock() })
     }
 
     func map<S>(_ transformBlock: @escaping (T) -> S) -> Promise<S> {
@@ -44,12 +84,33 @@ class Promise<T> {
     }
 
     func fulfill(_ value: T) {
-        self.value = value
-        thenBlocks.forEach { $0(value) }
+        self.state = .fulfilled(value)
     }
 
     func fail(_ error: Error) {
-        self.error = error
-        catchBlocks.forEach { $0(error) }
+        self.state = .failed(error)
     }
+
+    private func appendCallback(onFullfil: ((T) -> Void)?, onError: ((Error) -> Void)?) {
+        let callback = Callback(onFullfil: onFullfil, onError: onError)
+        callbacks.append(callback)
+        if state.isCompleted {
+            dispatchCallback(callback: callback)
+        }
+    }
+
+    private func runCallbacks() {
+        guard state.isCompleted else { return }
+        callbacks.forEach(dispatchCallback)
+    }
+
+    private func dispatchCallback(callback: Callback) {
+        switch state {
+        case .fulfilled(let value): callback.onFullfil?(value)
+        case .failed(let error): callback.onError?(error)
+        case .pending: return
+        }
+    }
+
+
 }

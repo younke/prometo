@@ -22,7 +22,6 @@ class PrometoTests: XCTestCase {
     func testFullfillPromise() {
         let promise = Promise<String>()
         XCTAssertNil(promise.value)
-
         promise.fulfill("ok")
         XCTAssertNotNil(promise.value)
         if let value = promise.value {
@@ -34,7 +33,6 @@ class PrometoTests: XCTestCase {
 
     func testFullfillCallsThenBlock() {
         let promise = Promise<String>()
-
         let exp = expectation(description: "did not call then block")
         let _ = promise.then { value in
             exp.fulfill()
@@ -103,6 +101,47 @@ class PrometoTests: XCTestCase {
             XCTAssertEqual(e.code, 1)
         }
         promise.fail(testError)
+        wait(for: [exp], timeout: 1.0)
+    }
+
+    func testEnsureCallsBlockEvenAfterThen() {
+        let promise = Promise<Int>()
+        let exp = expectation(description: "did not call ensure block")
+        var thenCalled = false
+        promise.then { _ in
+            thenCalled = true
+        }.ensure {
+            exp.fulfill()
+            XCTAssert(thenCalled)
+        }
+        promise.fulfill(1)
+        wait(for: [exp], timeout: 1.0)
+    }
+
+    func testEnsureCallsBlockEvenInError() {
+        let promise = Promise<Int>()
+        let exp = expectation(description: "did not call catch ensure block")
+        let testError = NSError(domain: "test", code: 1, userInfo: nil)
+        var catchCalled = false
+        promise.then { value in
+            XCTFail()
+        }.catch { _ in
+            catchCalled = true
+        }.ensure {
+            exp.fulfill()
+            XCTAssert(catchCalled)
+        }
+        promise.fail(testError)
+        wait(for: [exp], timeout: 1.0)
+    }
+
+    func testAddingCallbacksAfterFuilfill() {
+        let promise = Promise<Int>()
+        promise.fulfill(1)
+        let exp = expectation(description: "did not call block")
+        _ = promise.then { _ in
+            exp.fulfill()
+        }
         wait(for: [exp], timeout: 1.0)
     }
 
